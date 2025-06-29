@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { config } from '../config'; // Adjust the import path as necessary
 
 interface User {
   id: string;
@@ -15,7 +16,7 @@ interface AuthStore {
   checkAuth: () => Promise<void>;
 }
 
-const BASE_URL = "https://4a9d-113-161-91-25.ngrok-free.app";
+const BASE_URL = config.BASE_URL;
 
 export const useAuthStore = create<AuthStore>((set) => ({
   user: null,

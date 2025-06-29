@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { config } from '../config';
 
 interface Message {
   id: string;
@@ -37,7 +38,7 @@ interface ChatStore {
   uploadImages: (files: File[]) => Promise<string[]>;
 }
 
-const BASE_URL = "https://4a9d-113-161-91-25.ngrok-free.app";
+const BASE_URL = config.BASE_URL;
 
 export const useChatStore = create<ChatStore>((set, get) => ({
   conversations: [],

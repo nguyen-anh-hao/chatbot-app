@@ -2,10 +2,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useChatStore } from '../store/chatStore';
 import '../styles.css'; // Ensure you have the correct path to your styles
+import { config } from '../config';
 
 export const ChatInterface: React.FC = () => {
   const [input, setInput] = useState("");
-  const [copiedId, setCopiedId] = useState<string | null>(null);
+  // const [copiedId, setCopiedId] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -18,7 +19,7 @@ export const ChatInterface: React.FC = () => {
     addQueuedImages,
   } = useChatStore();
 
-  const BASE_URL = "https://4a9d-113-161-91-25.ngrok-free.app";
+  const BASE_URL = config.BASE_URL;
   const [enlargedImage, setEnlargedImage] = useState<string | null>(null);
 
   useEffect(() => {
@@ -31,15 +32,15 @@ export const ChatInterface: React.FC = () => {
     setInput("");
   };
 
-  const copyToClipboard = async (text: string, messageId: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopiedId(messageId);
-      setTimeout(() => setCopiedId(null), 2000);
-    } catch (err) {
-      console.error('Failed to copy text: ', err);
-    }
-  };
+  // const copyToClipboard = async (text: string, messageId: string) => {
+  //   try {
+  //     await navigator.clipboard.writeText(text);
+  //     setCopiedId(messageId);
+  //     setTimeout(() => setCopiedId(null), 2000);
+  //   } catch (err) {
+  //     console.error('Failed to copy text: ', err);
+  //   }
+  // };
 
   const handlePaste = (e: ClipboardEvent) => {
     const items = e.clipboardData?.items;
@@ -106,9 +107,7 @@ export const ChatInterface: React.FC = () => {
           </div>
         ) : (
           <div className="chat-message-list">
-            {isLoading ? (
-              <div className="chat-loading">Đang tải...</div>
-            ) : (
+            {
             currentConversation.messages.map((msg) => (
               <div key={msg.id} className={`chat-message ${msg.role}`}>
                 <div className="chat-message-content">
@@ -141,7 +140,7 @@ export const ChatInterface: React.FC = () => {
                 </div>
               </div>
             ))
-            )}
+            }
 
             {/* {isLoading && <div className="chat-loading">Đang xử lý...</div>} */}
             <div ref={messagesEndRef} />

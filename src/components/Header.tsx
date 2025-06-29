@@ -5,7 +5,8 @@ import '../styles.css';
 
 export const Header: React.FC = () => {
   const { user, logout } = useAuthStore();
-  const { currentConversation, status } = useChatStore();
+  const { currentConversation } = useChatStore();
+  // const { status } = useChatStore();
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -22,7 +23,7 @@ export const Header: React.FC = () => {
   return (
     <header className="header">
       <div className="header-left">
-        <h1 className="header-title">{currentConversation?.topic || 'Chatbot AI'}</h1>
+        <h1 className="header-title">{currentConversation?.topic || 'Cuộc trò chuyện mới'}</h1>
         {/* {status ? <p className="header-status">{status}</p> : <p className="header-status">Ạhihi</p>} */}
       </div>
 
