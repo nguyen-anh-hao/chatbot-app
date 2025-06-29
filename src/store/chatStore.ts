@@ -23,6 +23,7 @@ interface ChatStore {
   currentConversationId: string;
   currentConversation: Conversation | null;
   isLoading: boolean;
+  isThinking: boolean; // Add thinking state
   queuedImages: File[];
   status: string;
   loadConversations: () => Promise<void>;
@@ -45,6 +46,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
   currentConversationId: '',
   currentConversation: null,
   isLoading: false,
+  isThinking: false, // Initialize thinking state
   queuedImages: [],
   status: '',
 
@@ -331,7 +333,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
       conversationId = ''; // Để backend tự tạo
     }
 
-    set({ isLoading: true, status: "Đang gửi tin nhắn..." });
+    set({ isLoading: true, isThinking: true, status: "Đang gửi tin nhắn..." });
     
     // Add user message immediately
     const userMessage: Message = {
@@ -411,7 +413,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
       }
       
       // Tiếp tục gửi tin nhắn với URLs hình ảnh
-      set({ status: "Đang gửi tin nhắn..." });
+      set({ status: "Bot đang suy nghĩ..." });
       const res = await fetch(`${BASE_URL}/api/chat`, {
         method: "POST",
         credentials: "include",
@@ -480,7 +482,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
       console.error("Error sending message:", error);
       set({ status: "❌ Lỗi khi gửi tin nhắn" });
     } finally {
-      set({ isLoading: false, queuedImages: [] });
+      set({ isLoading: false, isThinking: false, queuedImages: [] });
     }
   },
 

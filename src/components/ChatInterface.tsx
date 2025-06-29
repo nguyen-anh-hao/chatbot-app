@@ -13,6 +13,7 @@ export const ChatInterface: React.FC = () => {
   const {
     currentConversation,
     isLoading,
+    isThinking,
     sendMessage,
     queuedImages,
     setQueuedImages,
@@ -28,8 +29,11 @@ export const ChatInterface: React.FC = () => {
 
   const handleSendMessage = async () => {
     if (!input.trim() && queuedImages.length === 0) return;
-    await sendMessage(input);
-    setInput("");
+    
+    const messageContent = input;
+    setInput(""); // Clear input immediately
+    
+    await sendMessage(messageContent);
   };
 
   // const copyToClipboard = async (text: string, messageId: string) => {
@@ -142,7 +146,22 @@ export const ChatInterface: React.FC = () => {
             ))
             }
 
-            {/* {isLoading && <div className="chat-loading">Đang xử lý...</div>} */}
+            {/* Show thinking animation when bot is thinking */}
+            {isThinking && (
+              <div className="chat-message assistant">
+                <div className="chat-message-content">
+                  <div className="thinking-animation">
+                    <div className="thinking-dots">
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                    </div>
+                    <span className="thinking-text"/>
+                  </div>
+                </div>
+              </div>
+            )}
+
             <div ref={messagesEndRef} />
           </div>
         )}
@@ -173,6 +192,7 @@ export const ChatInterface: React.FC = () => {
           onChange={(e) => setInput(e.target.value)}
           placeholder="Nhập tin nhắn của bạn..."
           rows={1}
+          disabled={isLoading}
           onKeyDown={(e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
               e.preventDefault();
@@ -181,7 +201,7 @@ export const ChatInterface: React.FC = () => {
           }}
         />
         <div className="chat-input-buttons">
-          <button onClick={() => fileInputRef.current?.click()}>
+          <button onClick={() => fileInputRef.current?.click()} disabled={isLoading}>
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
               <path d="M16.5 10.8333V15.5C16.5 16.0523 16.0523 16.5 15.5 16.5H4.5C3.94772 16.5 3.5 16.0523 3.5 15.5V10.8333" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
               <path d="M10 13.5V3.5M10 3.5L6.5 7M10 3.5L13.5 7" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
