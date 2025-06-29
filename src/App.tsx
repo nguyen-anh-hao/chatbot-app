@@ -26,13 +26,17 @@ function App() {
           if (conversationId === 'new') {
             // Tạo cuộc trò chuyện mới trống
             createEmptyConversation();
-          } else {
+          } else if (conversationId && conversationId !== 'chat') {
             // Chuyển đến cuộc trò chuyện từ ID trong URL
             switchConversation(conversationId);
+          } else {
+            // Nếu chỉ có /chat/ mà không có ID, mở chat trống
+            createEmptyConversation();
           }
-        } else if (isAuthenticated) {
-          // Mặc định chuyển đến /chat
-          window.history.pushState({}, '', '/chat');
+        } else {
+          // Nếu không có URL cụ thể, mở chat trống và cập nhật URL
+          createEmptyConversation();
+          window.history.pushState({}, '', '/chat/new');
         }
       });
     }

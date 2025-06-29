@@ -14,7 +14,7 @@ export const Login: React.FC = () => {
             </svg>
           </div>
           <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
-            ChatBot AI
+            Chatbot AI
           </h2>
           <p className="mt-2 text-sm text-gray-600">
             Đăng nhập để bắt đầu trò chuyện
@@ -23,7 +23,20 @@ export const Login: React.FC = () => {
         
         <button
           onClick={login}
-          className="btn btn-primary w-full flex justify-center py-3 px-4 rounded-lg transition-colors"
+          style={{
+            width: '100%',
+            display: 'flex',
+            justifyContent: 'center',
+            padding: '12px 24px',
+            borderRadius: '8px',
+            backgroundColor: '#2563eb',
+            color: '#fff',
+            border: 'none',
+            cursor: 'pointer',
+            transition: 'background 0.2s',
+          }}
+          onMouseOver={e => (e.currentTarget.style.backgroundColor = '#1d4ed8')}
+          onMouseOut={e => (e.currentTarget.style.backgroundColor = '#2563eb')}
         >
           Đăng nhập với Google
         </button>

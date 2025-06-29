@@ -1,29 +1,38 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useChatStore } from '../store/chatStore';
 
 export const Sidebar: React.FC = () => {
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
   const { 
     conversations, 
     currentConversationId, 
     createEmptyConversation, 
     switchConversation,
-    isLoading
+    loadConversations
   } = useChatStore();
+
+  useEffect(() => {
+    const init = async () => {
+      await loadConversations();
+      setIsInitialLoading(false);
+    };
+    init();
+  }, []);
 
   const handleNewChat = () => {
     createEmptyConversation();
-    // URL đã được cập nhật trong hàm createEmptyConversation
   };
 
   const handleSelectConversation = (conversationId: string) => {
-    switchConversation(conversationId);
-    // URL đã được cập nhật trong hàm switchConversation
+    if (conversationId !== currentConversationId) {
+      switchConversation(conversationId);
+    }
   };
 
   return (
-    <div className="sidebar">
+    <div className="sidebar-container">
       {/* Header */}
-      <div className="p-4 border-b border-gray-700">
+      <div className="p-4" style={{ borderBottom: '1px solid #ddd', marginTop: 4 }}>
         <button
           onClick={handleNewChat}
           className="btn btn-secondary w-full flex items-center justify-center space-x-2"
@@ -36,10 +45,12 @@ export const Sidebar: React.FC = () => {
       </div>
 
       {/* Conversations List */}
-      <div className="flex-1 overflow-y-auto p-2">
-        {isLoading ? (
-          <div className="flex justify-center p-4">
-            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+      <div className="flex-1 overflow-y-auto p-2" style={{ marginTop: 8 }}>
+        {isInitialLoading ? (
+          <div className="space-y-2 p-2">
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="chat-skeleton h-14 bg-gray-800 rounded-lg"></div>
+            ))}
           </div>
         ) : conversations.length === 0 ? (
           <div className="text-center py-8 text-gray-400">
@@ -58,8 +69,8 @@ export const Sidebar: React.FC = () => {
                   currentConversationId === conv.id ? 'active' : ''
                 }`}
               >
-                <p className="text-sm font-medium truncate">{conv.topic}</p>
-                <p className="text-xs opacity-60">{conv.message_count} tin nhắn</p>
+                <p className="text-sm font-medium truncate" style={{margin: 4}}>{conv.topic}</p>
+                {/* <p className="text-xs opacity-60">{conv.message_count} tin nhắn</p> */}
               </div>
             ))}
           </div>

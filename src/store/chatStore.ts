@@ -66,15 +66,10 @@ export const useChatStore = create<ChatStore>((set, get) => ({
         const pathParts = window.location.pathname.split('/');
         const urlConversationId = pathParts[pathParts.length - 1];
         
-        // Kiểm tra xem ID từ URL có trong danh sách conversations không
+        // Chỉ sử dụng ID từ URL nếu hợp lệ, không tự động chọn cuộc trò chuyện đầu tiên
         const isValidUrlId = urlConversationId && convs.some((conv: Conversation) => conv.id === urlConversationId);
         
-        // Ưu tiên sử dụng ID từ URL nếu hợp lệ, nếu không sử dụng cuộc trò chuyện đầu tiên
-        const newCurrentId = isValidUrlId 
-          ? urlConversationId 
-          : (convs.length > 0 ? convs[0].id : '');
-        
-        // Tìm currentConversation tương ứng
+        const newCurrentId = isValidUrlId ? urlConversationId : '';
         const newCurrentConversation = newCurrentId 
           ? convs.find((conv: Conversation) => conv.id === newCurrentId) || null
           : null;
@@ -129,7 +124,8 @@ export const useChatStore = create<ChatStore>((set, get) => ({
     });
     
     // Cập nhật URL
-    window.history.pushState({}, '', `/chat/${tempId}`);
+    // window.history.pushState({}, '', `/chat/${tempId}`);
+    window.history.replaceState({}, '', `/chat/new`);
   },
 
   createConversation: async (topic?: string) => {

@@ -1,41 +1,62 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useAuthStore } from '../store/authStore';
 import { useChatStore } from '../store/chatStore';
+import '../styles.css';
 
 export const Header: React.FC = () => {
   const { user, logout } = useAuthStore();
   const { currentConversation, status } = useChatStore();
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowDropdown(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   return (
-    <div className="bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center">
-      <div>
-        <h1 className="text-lg font-semibold text-gray-900">
-          {currentConversation?.topic || "ChatBot AI"}
-        </h1>
-        {status && (
-          <p className="text-sm text-gray-600 mt-1">{status}</p>
-        )}
+    <header className="header">
+      <div className="header-left">
+        <h1 className="header-title">{currentConversation?.topic || 'Chatbot AI'}</h1>
+        {/* {status ? <p className="header-status">{status}</p> : <p className="header-status">Ạhihi</p>} */}
       </div>
-      
-      <div className="flex items-center space-x-3">
-        {user && (
-          <div className="flex items-center space-x-3">
-            <img src={user.picture} alt={user.name} className="w-8 h-8 rounded-full" />
-            <div className="hidden-md md-block">
-              <p className="text-sm font-medium text-gray-900">{user.name}</p>
-              <p className="text-xs text-gray-500">{user.email}</p>
+
+      {user && (
+        <div className="avatar-menu" ref={dropdownRef}>
+          <button
+            className="avatar-button"
+            onClick={() => setShowDropdown((prev) => !prev)}
+            aria-label="User menu"
+          >
+            <img src={user.picture} alt={user.name} className="avatar-image" />
+          </button>
+
+          {showDropdown && (
+            <div className="avatar-dropdown">
+              <div className="dropdown-header">
+                <p className="dropdown-name">{user.name}</p>
+                <p className="dropdown-email">{user.email}</p>
+              </div>
+              <button className="logout-button" onClick={logout}>
+                <svg className="logout-icon" viewBox="0 0 24 24" stroke="currentColor" fill="none">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                  />
+                </svg>
+                Đăng xuất
+              </button>
             </div>
-            <button
-              onClick={logout}
-              className="text-gray-500 hover-text-gray-700 p-1 rounded transition-colors"
-            >
-              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-              </svg>
-            </button>
-          </div>
-        )}
-      </div>
-    </div>
+          )}
+        </div>
+      )}
+    </header>
   );
 };
