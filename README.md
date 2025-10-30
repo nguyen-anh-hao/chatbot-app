@@ -78,7 +78,7 @@ An intelligent chatbot that helps users explore and learn how to cook a wide var
   ```
 
 ## Authors
-- **Nguyễn Anh Hào** - Fullstack Developer
+- **Nguyễn Anh Hào** - Software Developer
 - **Trương Vĩnh An** - AI Engineer
 - **Nguyễn Hữu Bền** - AI Engineer
 - **Nguyễn Trần Gia** - AI Engineer
